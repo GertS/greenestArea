@@ -29,18 +29,12 @@ mainFunction <- function(country = "Netherlands", area = "city", ){
   level <- ifelse(area == "city", 2, 1)  # greenest city or province
   ISO <- data.frame(getData("ISO3") )
   countryCode <- as.character(ISO[ISO$NAME== country,'ISO3'])
-  areaBounderies <- raster::getData('GADM',country=countryCode, level= level)
+  areaBounderies <- raster::getData('GADM',country=countryCode, level= level, path = "data")
   
   
   # Reproject data ----------------------------------------------------------
   
   areaBounderies<- spTransform(areaBounderies, CRS(proj4string(modis)))
-  
-  
-  # Create objects that can be use for extraction ---------------------------
-  
-  # areaBounderies@data$NAME_2 # for municipality
-  # areaBounderies@data$NAME_1 # for provinces 
   
   # Determine mean NDVI per area for each month ----------------------------
   
@@ -54,6 +48,13 @@ mainFunction <- function(country = "Netherlands", area = "city", ){
   
   
   # Select greenest area ----------------------------------------------------
+  maxJan <- which.max(meanPerArea_01)
+  maxAug <- which.max(meanPerArea_08)
+  maxAll <- which.max(meanPerArea)
+  
+  print(paste("The greenest area in January is:",names(maxJan)))
+  print(paste("The greenest area in August is :",names(maxAug)))
+  print(paste("The greenest area overall is   :",names(maxAll)))
   
 } # end function
 

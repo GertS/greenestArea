@@ -20,6 +20,7 @@ mainFunction <- function(country = "Netherlands", area = "provinces" ){
     download.file(url = modis.url, destfile = 'data/modis.zip', method = 'wget')
   }
   modisData <- unzip('data/modis.zip', exdir='data/modis')
+  modisData[modisData < 0] = NA
   
   # Identify the right file and merge all layers in brick
   modisPath <- list.files(path='data/modis', pattern = glob2rx('*.grd'), full.names = TRUE)

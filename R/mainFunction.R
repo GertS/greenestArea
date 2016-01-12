@@ -54,7 +54,16 @@ mainFunction <- function(country = "Netherlands", area = "provinces" ){
   meanPerArea_08 <- extractModis(modis,areaBounderies,8) #August
   meanPerArea    <- extractModis(modis,areaBounderies) #Whole Year
   
+
+  # Select greenest area ----------------------------------------------------
+  maxJan <- which.max(meanPerArea_01)
+  maxAug <- which.max(meanPerArea_08)
+  maxAll <- which.max(meanPerArea)
   
+  print(paste("The greenest area in January is:",names(maxJan)))
+  print(paste("The greenest area in August is :",names(maxAug)))
+  print(paste("The greenest area overall is   :",names(maxAll)))
+
   # Make plot of area NDVI means  ------------------------------------------
   
   # Define color  pallet (usage of spplot or ggplot is probably more convenient)
@@ -65,21 +74,12 @@ mainFunction <- function(country = "Netherlands", area = "provinces" ){
   
   # plot
   par(mfrow=c(1,3))
-    plot(areaBounderies, col= col(meanPerArea), main='Whole year')
-    plot(areaBounderies, col= col(meanPerArea_01), main='January') 
-    plot(areaBounderies, col= col(meanPerArea_08), main='August')
+  plot(areaBounderies, col= col(meanPerArea), main=paste("Overall: \n",names(maxAll)))
+  plot(areaBounderies, col= col(meanPerArea_01), main=paste("January: \n",names(maxJan)))
+  plot(areaBounderies, col= col(meanPerArea_08), main=paste("August: \n",names(maxAug)))
+  
+
     
-  
-  
-  # Select greenest area ----------------------------------------------------
-  maxJan <- which.max(meanPerArea_01)
-  maxAug <- which.max(meanPerArea_08)
-  maxAll <- which.max(meanPerArea)
-  
-  print(paste("The greenest area in January is:",names(maxJan)))
-  print(paste("The greenest area in August is :",names(maxAug)))
-  print(paste("The greenest area overall is   :",names(maxAll)))
-  
 } # end function
 
 extractModis <- function(modis,areaBounderies,month = 0){

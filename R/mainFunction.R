@@ -8,7 +8,7 @@
 library(rgdal)
 library(raster)
 
-mainFunction <- function(country = "Netherlands", area = "city", ){
+mainFunction <- function(country = "Netherlands", area = "provinces" ){
   # Download and read data --------------------------------------------------
   
   dir.create("data", showWarnings = FALSE)

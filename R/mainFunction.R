@@ -26,14 +26,21 @@ mainFunction <- function(country = "Netherlands", area = "provinces" ){
   modis <- brick(modisPath)
   
   # Download city bounderies of country
-  level <- ifelse(area == "city", 2, 1)  # greenest city or province
+  level <- ifelse(area == "municipality", 2, 1)  # greenest city or province
+  if (level == 1){
+    if (area == "belgiumMunicipality"){
+      level <- 3
+    }
+  }
   ISO <- data.frame(getData("ISO3") )
   countryCode <- as.character(ISO[ISO$NAME== country,'ISO3'])
   areaBounderies <- raster::getData('GADM',country=countryCode, level= level, path = "data")
   if (level == 1){
     areaBounderies <- areaBounderies[areaBounderies$ENGTYPE_1 != "Water body",]
-  }else{
+  }else if (level == 2){
     areaBounderies <- areaBounderies[areaBounderies$ENGTYPE_2 != "Water body",]
+  }else{
+    areaBounderies <- areaBounderies[areaBounderies$ENGTYPE_3 != "Water body",]
   }
   
   
@@ -81,10 +88,14 @@ extractModis <- function(modis,areaBounderies,month = 0){
   }else{
     modisPerArea <- extract(modis[[month]],areaBounderies)
   }
-  if(class(areaBounderies$NAME_2) == "NULL"){ #No municipalities found, thus using provinces
-    names(modisPerArea) <- areaBounderies$NAME_1
+  if(class(areaBounderies$NAME_3) == "NULL"){
+    if(class(areaBounderies$NAME_2) == "NULL"){ #No municipalities found, thus using provinces
+      names(modisPerArea) <- areaBounderies$NAME_1
+    }else{
+      names(modisPerArea) <- areaBounderies$NAME_2
+    }
   }else{
-    names(modisPerArea) <- areaBounderies$NAME_2
+    names(modisPerArea) <- areaBounderies$NAME_3
   }
   means <- lapply(modisPerArea,function(n) mean(n,na.rm =T))
   return (means)

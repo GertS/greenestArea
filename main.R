@@ -8,4 +8,15 @@ source("R/mainFunction.R")
 mainFunction()
 
 ## per municipality:
-mainFunction(area="city") ##takes a long time!!!! (around 60 seconds on my pc)
+mainFunction(area="municipality") ##takes a long time!!!! (around 60 seconds on my pc)
+
+##per province in Germany:
+mainFunction(country = "Germany", area="provinces")
+
+##per sub country in Belgium:
+mainFunction(country = "Belgium", area="provinces")
+
+##per province in Belgium:
+mainFunction(country = "Belgium", area="belgiumMunicipality")
+
+

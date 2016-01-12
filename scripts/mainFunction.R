@@ -8,7 +8,7 @@
 library(rgdal)
 library(raster)
 
-mainFunction <- function(country = "NLD", area = city, ){
+mainFunction <- function(country = "Netherlands", area = "city", ){
 # Download and read data --------------------------------------------------
 
 dir.create("data", showWarnings = FALSE)
@@ -26,15 +26,24 @@ modisPath <- list.files(path='data/modis', pattern = glob2rx('*.grd'), full.name
 modis <- brick(modisPath)
 
 # Download city bounderies of country
-level <- ifelse(area == 'City' # make loop to set level 
-areaBounderies <- raster::getData('GADM',country=country, level= level)
+level <- ifelse(area == "city", 2, 1)  # greenest city or province
+ISO <- data.frame(getData("ISO3") )
+countryCode <- as.character(ISO[ISO$NAME== country,'ISO3'])
+areaBounderies <- raster::getData('GADM',country=countryCode, level= level)
 
 
 # Reproject data ----------------------------------------------------------
 
+areaBounderies<- spTransform(areaBounderies, CRS(proj4string(modis)))
+
+
+# Create objects that can be use for extraction ---------------------------
+
+areaBounderies@data$NAME_2 # for municipality
+areaBounderies@data$NAME_1 # for provinces 
 
 # Determine mean NDVI per area for each month ----------------------------
-# use funciton extract
+
 
 # Make plot of area NDVI means  ------------------------------------------
 # dus per plaats een bepaalde intensiteit groen

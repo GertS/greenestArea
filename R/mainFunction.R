@@ -45,7 +45,19 @@ mainFunction <- function(country = "Netherlands", area = "city", ){
   
   
   # Make plot of area NDVI means  ------------------------------------------
-  # dus per plaats een bepaalde intensiteit groen
+  
+  # Define color  pallet (usage of spplot or ggplot is probably more convenient)
+  rbPal <- colorRampPalette(c('yellow',"white",'green'))
+  col <- function(ndvi){
+    rbPal(12)[as.numeric(cut(unlist(ndvi),breaks = 10))]
+  }
+  
+  # plot
+  par(mfrow=c(1,3))
+    plot(areaBounderies, col= col(meanPerArea), main='Whole year')
+    plot(areaBounderies, col= col(meanPerArea_01), main='January') 
+    plot(areaBounderies, col= col(meanPerArea_08), main='August')
+    
   
   
   # Select greenest area ----------------------------------------------------

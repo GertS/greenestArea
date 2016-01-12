@@ -30,7 +30,11 @@ mainFunction <- function(country = "Netherlands", area = "provinces" ){
   ISO <- data.frame(getData("ISO3") )
   countryCode <- as.character(ISO[ISO$NAME== country,'ISO3'])
   areaBounderies <- raster::getData('GADM',country=countryCode, level= level, path = "data")
-  areaBounderies <- areaBounderies[areaBounderies$ENGTYPE_1 != "Water body",]
+  if (level == 1){
+    areaBounderies <- areaBounderies[areaBounderies$ENGTYPE_1 != "Water body",]
+  }else{
+    areaBounderies <- areaBounderies[areaBounderies$ENGTYPE_2 != "Water body",]
+  }
   
   
   # Reproject data ----------------------------------------------------------
